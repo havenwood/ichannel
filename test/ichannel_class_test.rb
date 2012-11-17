@@ -1,7 +1,7 @@
 require_relative 'setup'
 class IChannelTest < Test::Unit::TestCase
   def setup
-    @channel = IChannel.new Marshal
+    @channel = IChannel.new [YAML, Marshal, JSON].sample
   end
 
   def teardown
