@@ -10,6 +10,14 @@ class IChannel
   end
 
   #
+  # @return [Boolean]
+  #   Returns true when the channel is closed.
+  #
+  def closed?
+    @reader.closed? && @writer.closed?
+  end
+
+  #
   # Close the channel.
   #
   # @return [Boolean]
