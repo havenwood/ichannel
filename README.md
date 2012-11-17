@@ -30,13 +30,13 @@ The serializer of choice is `Marshal` but it could just as easily be `JSON` or
 
 ```ruby
 channel = IChannel.new Marshal
-channel.put 'hello'
-channel.put 'goodbye'
 pid = fork do 
-  channel.get # => 'hello'
-  channel.get # => 'goodbye'
+  channel.put Process.pid
+  channel.put 'Hello!'
 end
 Process.wait pid
+channel.get # => Fixnum
+channel.get # => 'Hello!'
 ```
 
 __SERIALIZERS__
