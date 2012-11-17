@@ -64,6 +64,8 @@ class IChannel
     _, writable, _ = IO.select [], [@writer], [], 0.1
     if writable
       writable[0].send @serializer.dump(@object), 0
+    else
+      raise IOError, 'The channel cannot be written to.'
     end
   end
   alias_method :put!, :write
