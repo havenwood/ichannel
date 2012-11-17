@@ -13,7 +13,7 @@ class IChannel
   # Close the channel.
   #
   # @raise [IOError]
-  #   When the channel is closed already.
+  #   When the channel is already closed.
   #
   # @return [Boolean]
   #   Returns true(-ish) when the channel is closed successfully.
@@ -41,6 +41,9 @@ class IChannel
   #
   # Add an object to the channel.
   #
+  # @raise [IOError]
+  #   When the channel cannot be written to.
+  #
   # @param [Object] object
   #   An object to add to the channel.
   #
@@ -56,6 +59,9 @@ class IChannel
 
   #
   # Receive a object from the channel.
+  #
+  # @raise [IOError]
+  #   When the channel cannot be read from.
   #
   # @return [Object]
   #   The object added to the channel.
