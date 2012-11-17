@@ -103,7 +103,7 @@ class IChannel
   #   The object read from the channel.
   #
   def recv! 
-    readble, _ = IO.select [@reader], [], []
+    readble, _ = IO.select [@reader], [], [], 0.1
     if readable
       msg, _ = readable[0].recvmsg
       @serializer.load msg
