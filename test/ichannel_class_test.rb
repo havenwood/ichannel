@@ -18,6 +18,20 @@ class IChannelTest < Test::Unit::TestCase
     assert_equal %w(a b c), @channel.get
   end
 
+  def test_put_on_closed_channel
+    @channel.close
+    assert_raises IOError do
+      @channel.put %w(a)
+    end
+  end
+
+  def test_get_on_closed_channel
+    @channel.close
+    assert_raises IOError do
+      @channel.put %w(b)
+    end
+  end
+
   def test_queued_messages
     pid = fork do 
       @channel.put %w(a)

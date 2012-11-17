@@ -48,6 +48,8 @@ class IChannel
     _, writable, _ = IO.select [], [@writer], [], 0.1
     if writable
       @writer.send @serializer.dump(object), 0
+    else
+      raise IOError, 'The channel cannot be written to.'
     end
   end
   alias_method :put, :write
@@ -63,6 +65,8 @@ class IChannel
     if readable
       msg, _ = @reader.recvmsg
       @serializer.load msg
+    else
+      raise IOError, 'The channel cannot be read from.' 
     end
   end
   alias_method :get, :recv
