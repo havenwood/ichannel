@@ -25,8 +25,10 @@ class IChannel
   #   Returns nil when the channel is already closed.
   #
   def close
-    if !@reader.closed? && !@writer.closed?
-      !! [@reader.close, @writer.close]
+    unless closed?
+      @reader.close
+      @writer.close
+      true
     end
   end
 
@@ -40,11 +42,7 @@ class IChannel
   #   An object to add to the channel.
   #
   def write(object)
-    if @writer.closed?
-      raise IOError, 'The channel cannot be written to (closed).' 
-    end
-    _, writable, _ = IO.select [], [@writer], []
-    writable[0].send @serializer.dump(object), 0
+    write!(object, nil)
   end
   alias_method :put, :write
 
@@ -60,10 +58,13 @@ class IChannel
   #
   # @param (see IChannel#put).
   #
-  def write!(object)
-    _, writable, _ = IO.select [], [@writer], [], 0.1
+  def write!(object, timeout = 0.1)
+    if @writer.closed?
+      raise IOError, 'The channel cannot be written to (closed).'
+    end
+    _, writable, _ = IO.select [], [@writer], [], timeout
     if writable
-      writable[0].send @serializer.dump(@object), 0
+      writable[0].send @serializer.dump(object), 0
     else
       raise IOError, 'The channel cannot be written to.'
     end
@@ -80,12 +81,7 @@ class IChannel
   #   The object read from the channel.
   #   
   def recv
-    if @reader.closed?
-      raise IOError, 'The channel cannot be read from (closed).'
-    end
-    readable, _ = IO.select [@reader], [], []
-    msg, _ = readable[0].recvmsg
-    @serializer.load msg
+    recv!(nil)
   end
   alias_method :get, :recv
 
@@ -102,8 +98,12 @@ class IChannel
   # @return [Object]
   #   The object read from the channel.
   #
-  def recv! 
-    readble, _ = IO.select [@reader], [], [], 0.1
+  def recv!(timeout = 0.1)
+    if @reader.closed?
+      raise IOError, 'The channel cannot be read from (closed).'
+    end
+
+    readable, _ = IO.select [@reader], [], [], timeout
     if readable
       msg, _ = readable[0].recvmsg
       @serializer.load msg
@@ -112,5 +112,4 @@ class IChannel
     end
   end
   alias_method :get!, :recv!
-
 end
