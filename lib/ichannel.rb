@@ -102,7 +102,6 @@ class IChannel
     if @reader.closed?
       raise IOError, 'The channel cannot be read from (closed).'
     end
-
     readable, _ = IO.select [@reader], [], [], timeout
     if readable
       msg, _ = readable[0].recvmsg
