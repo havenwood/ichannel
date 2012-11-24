@@ -1,3 +1,7 @@
 source 'http://rubygems.org'
-gem 'rake'
+group :development do
+  gem 'rake'
+  gem 'redcarpet'
+  gem 'yard'
+end
 gemspec
