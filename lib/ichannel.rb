@@ -69,7 +69,7 @@ class IChannel
       raise IOError, 'The channel cannot be written to.'
     end
   end
-  alias_method :put!, :write
+  alias_method :put!, :write!
 
   #
   # Receive a object from the channel.
