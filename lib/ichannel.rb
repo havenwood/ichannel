@@ -68,7 +68,7 @@ class IChannel
     if @writer.closed?
       raise IOError, 'The channel cannot be written to (closed).'
     end
-    _, writable, _ = IO.select [], [@writer], [], timeout
+    _, writable, _ = IO.select nil, [@writer], nil, timeout
     if writable
       writable[0].send @serializer.dump(object), 0
     else
@@ -114,7 +114,7 @@ class IChannel
     if @reader.closed?
       raise IOError, 'The channel cannot be read from (closed).'
     end
-    readable, _ = IO.select [@reader], [], [], timeout
+    readable, _ = IO.select [@reader], nil, nil, timeout
     if readable
       msg, _ = readable[0].recvmsg
       @serializer.load msg
