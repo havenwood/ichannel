@@ -1,2 +1,7 @@
 == HEAD
+	* Micro speed improvement on #write!, & #recv! operations.
+		
+		By passing nil instead of creating two empty arrays for every read/write 
+		operation we should see a very small improvement in their performance.
+
 	* Add ChangeLog.txt 
