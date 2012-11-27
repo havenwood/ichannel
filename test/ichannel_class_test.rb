@@ -54,4 +54,10 @@ class IChannelTest < Test::Unit::TestCase
     @channel.get 
     assert @channel.empty?
   end
+
+  def test_empty_on_closed_channel
+    @channel.put %w(a)
+    @channel.close
+    assert @channel.empty?
+  end
 end

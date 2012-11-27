@@ -129,6 +129,10 @@ class IChannel
   #   Returns true if the channel is empty (nothing to read).
   #
   def empty?
-    ! IO.select [@reader], nil, nil, 0.1
+    if @reader.closed? 
+      true
+    else
+      ! IO.select [@reader], nil, nil, 0.1
+    end
   end
 end

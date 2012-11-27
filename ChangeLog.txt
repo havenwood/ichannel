@@ -1,4 +1,10 @@
 == HEAD
+	* Modify IChannel#empty?
+
+		It now returns true in case the underlying UNIXSocket being used as a 
+		reader is closed.
+
+== v3.1.0
 	* Add IChannel#empty?.
 	
 		IChannel#empty? returns true when the channel is empty(nothing to read).
