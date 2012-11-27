@@ -1,4 +1,4 @@
-== HEAD
+== v4.0.0
 	* Modify IChannel#empty?
 
 		It now returns true in case the underlying UNIXSocket being used as a 
