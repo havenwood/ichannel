@@ -115,11 +115,6 @@ class IChannel
       raise IOError, 'The channel cannot be read from (closed).'
     end
     readable, _ = IO.select [@reader], nil, nil, timeout
-    if readable.nil?
-      p "READABLE NIL!?"
-    else
-      p "HRM"
-    end
     if readable
       msg, _ = readable[0].recvmsg
       @serializer.load msg
