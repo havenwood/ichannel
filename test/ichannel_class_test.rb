@@ -39,4 +39,19 @@ class IChannelTest < Test::Unit::TestCase
     assert_equal %w(a), @channel.get
     assert_equal %w(b), @channel.get
   end
+
+  def test_empty_on_empty_channel
+    assert @channel.empty?
+  end
+
+  def test_empty_on_populated_channel
+    @channel.put %w(a)
+    refute @channel.empty?
+  end
+
+  def test_empty_on_emptied_channel
+    @channel.put %w(a)
+    @channel.get 
+    assert @channel.empty?
+  end
 end

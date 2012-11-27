@@ -115,6 +115,11 @@ class IChannel
       raise IOError, 'The channel cannot be read from (closed).'
     end
     readable, _ = IO.select [@reader], nil, nil, timeout
+    if readable.nil?
+      p "READABLE NIL!?"
+    else
+      p "HRM"
+    end
     if readable
       msg, _ = readable[0].recvmsg
       @serializer.load msg
@@ -123,4 +128,12 @@ class IChannel
     end
   end
   alias_method :get!, :recv!
+
+  #
+  # @return [Boolean]
+  #   Returns true if the channel is empty (nothing to read).
+  #
+  def empty?
+    ! IO.select [@reader], nil, nil, 0.1
+  end
 end
