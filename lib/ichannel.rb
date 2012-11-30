@@ -70,7 +70,7 @@ class IChannel
     end
     _, writable, _ = IO.select nil, [@writer], nil, timeout
     if writable
-      writable[0].send @serializer.dump(object), 0
+      writable[0].syswrite @serializer.dump(object)
     else
       raise IOError, 'The channel cannot be written to.'
     end
@@ -116,7 +116,7 @@ class IChannel
     end
     readable, _ = IO.select [@reader], nil, nil, timeout
     if readable
-      msg, _ = readable[0].recvmsg
+      msg = readable[0].sysread 1024
       @serializer.load msg
     else
       raise IOError, 'The channel cannot be read from.'
@@ -126,7 +126,7 @@ class IChannel
 
   #
   # @return [Boolean]
-  #   Returns true if the channel is empty (nothing to read).
+  #   Returns true when the channel is empty (nothing to read).
   #
   def empty?
     if @reader.closed? 
@@ -134,5 +134,13 @@ class IChannel
     else
       ! IO.select [@reader], nil, nil, 0.1
     end
+  end
+
+  #
+  # @return [Boolean]
+  #   Returns true when the channel is readable.
+  #
+  def readable?
+    ! empty?
   end
 end

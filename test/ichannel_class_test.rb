@@ -60,4 +60,21 @@ class IChannelTest < Test::Unit::TestCase
     @channel.close
     assert @channel.empty?
   end
+
+  def test_readable_on_populated_channel
+    @channel.put %w(a)
+    @channel.put %w(b)
+    assert @channel.readable?
+  end
+
+  def test_readable_on_empty_channel
+    @channel.put %w(42)
+    @channel.get # discard
+    refute @channel.readable?
+  end
+
+  def test_readable_on_closed_channel
+    @channel.close
+    refute @channel.readable?
+  end
 end
