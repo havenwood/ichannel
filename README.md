@@ -75,12 +75,12 @@ __REAL WORLD EXAMPLES__
     extracted into its own project when I realised it could be useful on its
     own.
 
- - [XPool](https://github.com/robgleeson/xpool)  
-    A UNIX(X) Process Pool.
+ - [xpool](https://github.com/robgleeson/xpool)  
+    A lightweight UNIX(X) process pool implementation.
 
   Other people have started to write code on top of ichannel, too:
   
-  - [IFuture](https://github.com/Havenwood/ifuture)
+  - [ifuture](https://github.com/Havenwood/ifuture)
     An implementation of Futures for Ruby using process forks and ichannel.
 
 __PLATFORM SUPPORT__
