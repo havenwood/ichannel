@@ -49,22 +49,28 @@ class IChannel
   #
   # Add an object to the channel.
   #
-  # Unlike {#put}, which waits indefinitely until the channel becomes writable,
-  # this method will raise an IOError if 0.1 seconds elapse and the channel 
-  # remains unwritable.
+  # Unlike {#write}, which waits indefinitely until the channel becomes writable,
+  # this method will raise an IOError when _timeout_ seconds elapse and 
+  # the channel remains unwritable.
+  #
+  # @param 
+  #   (see IChannel#write)
+  #
+  # @param [Numeric] timeout
+  #   The number of seconds to wait for the channel to become writable.
+  #
+  # @raise (see IChannel#write) 
   #
   # @raise [IOError]
-  #   When 0.1 seconds elapse and the channel remains unwritable.
-  #
-  # @param (see IChannel#put).
+  #   When _timeout_ seconds elapse & the channel remains unwritable.  
   #
   def write!(object, timeout = 0.1)
     if @writer.closed?
       raise IOError, 'The channel cannot be written to (closed).'
     end
-    _, writable, _ = IO.select [], [@writer], [], timeout
+    _, writable, _ = IO.select nil, [@writer], nil, timeout
     if writable
-      writable[0].send @serializer.dump(object), 0
+      writable[0].syswrite @serializer.dump(object)
     else
       raise IOError, 'The channel cannot be written to.'
     end
@@ -72,7 +78,7 @@ class IChannel
   alias_method :put!, :write!
 
   #
-  # Receive a object from the channel.
+  # Receive an object from the channel.
   #
   # @raise [IOError]
   #   When the channel is closed.
@@ -86,15 +92,21 @@ class IChannel
   alias_method :get, :recv
 
   #
-  # Receive a object from the channel.
+  # Receive an object from the channel.
   #
-  # Unlike {#get}, which waits indefinitely until the channel becomes readable, 
-  # this method will raise an IOError if 0.1 seconds elapse and the channel 
-  # remains unreadable.
+  # Unlike {#recv}, which waits indefinitely until the channel becomes readable, 
+  # this method will raise an IOError when _timeout_ seconds elapse and the 
+  # channel remains unreadable.
   #
+  # @param [Numeric] timeout
+  #   The number of seconds to wait for the channel to become readable.
+  #   
   # @raise [IOError]
-  #   When 0.1 seconds elapse and the channel remains unreadable.
-  #
+  #   (see IChannel#recv)
+  #   
+  # @raise [IOError]
+  #   When _timeout_ seconds elapse & the channel remains unreadable.
+  #   
   # @return [Object]
   #   The object read from the channel.
   #
@@ -102,13 +114,33 @@ class IChannel
     if @reader.closed?
       raise IOError, 'The channel cannot be read from (closed).'
     end
-    readable, _ = IO.select [@reader], [], [], timeout
+    readable, _ = IO.select [@reader], nil, nil, timeout
     if readable
-      msg, _ = readable[0].recvmsg
+      msg = readable[0].sysread 1024
       @serializer.load msg
     else
       raise IOError, 'The channel cannot be read from.'
     end
   end
   alias_method :get!, :recv!
+
+  #
+  # @return [Boolean]
+  #   Returns true when the channel is empty (nothing to read).
+  #
+  def empty?
+    if @reader.closed? 
+      true
+    else
+      ! IO.select [@reader], nil, nil, 0.1
+    end
+  end
+
+  #
+  # @return [Boolean]
+  #   Returns true when the channel is readable.
+  #
+  def readable?
+    ! empty?
+  end
 end

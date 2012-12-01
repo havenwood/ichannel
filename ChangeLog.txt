@@ -1,0 +1,17 @@
+== v4.0.0
+	* Modify IChannel#empty?
+
+		It now returns true in case the underlying UNIXSocket being used as a 
+		reader is closed.
+
+== v3.1.0
+	* Add IChannel#empty?.
+	
+		IChannel#empty? returns true when the channel is empty(nothing to read).
+	
+	* Micro speed improvement on #write!, & #recv! operations.
+
+		By passing nil instead of creating two empty arrays for every read/write 
+		operation we should see a very small improvement in their performance.
+
+	* Add ChangeLog.txt 
