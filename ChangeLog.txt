@@ -1,15 +1,17 @@
 == v5.0.0
 	* Remove IChannel#empty?
 	
-	I think the #readable? method is all you need, since the inverse of 
-	#readable? is the same as #empty? (at least in terms of logic).
+		I think the #readable? method is all you need, and is a much more 
+		accurate description of what the method is asking. We cannot determine
+		if the channel is really empty, but we can ask if it is readable at the 
+		time you ask.
 
 == v4.1.0
 	* Add IChannel#readable?
 
-	A method that can tell you whether or not a read would block. 
-	When it returns true, a read shouldn't block, on the other hand
-	if it were false it'd likely block by the time you call #get.
+		A method that can tell you whether or not a read would block. 
+		When it returns true, a read shouldn't block, on the other hand
+		if it were false it'd likely block by the time you call #get.
 
 == v4.0.0
 	* Modify IChannel#empty?
