@@ -1,3 +1,10 @@
+== HEAD
+	* IChannel#readable? no longer blocks.
+
+	IChannel#readable? no longer blocks for 0.1 seconds on IO.select call.
+	Thanks to quezacoatl(https://github.com/quezacoatl) for the initial 
+	implementation. 
+
 == v5.0.0
 	* Remove IChannel#empty?
 	
