@@ -132,8 +132,8 @@ class IChannel
     if @reader.closed? 
       false
     else
-      readable = IO.select [@reader], nil, nil, 0.1
-      !! readable
+      readable, _ = IO.select [@reader], nil, nil, 0
+      !! readable && readable.first == @reader
     end
   end
 end
