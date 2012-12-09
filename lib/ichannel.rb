@@ -133,7 +133,7 @@ class IChannel
       false
     else
       readable, _ = IO.select [@reader], nil, nil, 0
-      !! readable && readable.first == @reader
+      !! readable 
     end
   end
 end
