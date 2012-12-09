@@ -126,21 +126,14 @@ class IChannel
 
   #
   # @return [Boolean]
-  #   Returns true when the channel is empty (nothing to read).
-  #
-  def empty?
-    if @reader.closed? 
-      true
-    else
-      ! IO.select [@reader], nil, nil, 0.1
-    end
-  end
-
-  #
-  # @return [Boolean]
   #   Returns true when the channel is readable.
   #
   def readable?
-    ! empty?
+    if @reader.closed? 
+      false
+    else
+      readable = IO.select [@reader], nil, nil, 0.1
+      !! readable
+    end
   end
 end
