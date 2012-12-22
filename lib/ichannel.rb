@@ -1,5 +1,8 @@
 require 'socket'
 class IChannel
+
+  SEP = '_$_'
+
   #
   # @param [#dump,#load] serializer
   #   Any object that implements dump, & load.
@@ -70,7 +73,8 @@ class IChannel
     end
     _, writable, _ = IO.select nil, [@writer], nil, timeout
     if writable
-      writable[0].syswrite @serializer.dump(object)
+      serialized = @serializer.dump(object)
+      writable[0].syswrite "#{serialized}#{SEP}"
     else
       raise IOError, 'The channel cannot be written to.'
     end
@@ -116,7 +120,9 @@ class IChannel
     end
     readable, _ = IO.select [@reader], nil, nil, timeout
     if readable
-      @serializer.load readable[0]
+      serialized = readable[0].readline(SEP).chomp(SEP)
+
+      @serializer.load serialized
     else
       raise IOError, 'The channel cannot be read from.'
     end
