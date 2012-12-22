@@ -3,10 +3,10 @@ class IChannel
   #
   # @param [#dump,#load] serializer
   #   Any object that implements dump, & load.
-  #   
-  def initialize(serializer) 
+  #
+  def initialize(serializer)
     @reader, @writer = UNIXSocket.pair Socket::SOCK_DGRAM
-    @serializer = serializer 
+    @serializer = serializer
   end
 
   #
@@ -35,7 +35,7 @@ class IChannel
   #
   # Add an object to the channel.
   #
-  # @raise [IOError] 
+  # @raise [IOError]
   #   When the channel is closed.
   #
   # @param [Object] object
@@ -50,19 +50,19 @@ class IChannel
   # Add an object to the channel.
   #
   # Unlike {#write}, which waits indefinitely until the channel becomes writable,
-  # this method will raise an IOError when _timeout_ seconds elapse and 
+  # this method will raise an IOError when _timeout_ seconds elapse and
   # the channel remains unwritable.
   #
-  # @param 
+  # @param
   #   (see IChannel#write)
   #
   # @param [Numeric] timeout
   #   The number of seconds to wait for the channel to become writable.
   #
-  # @raise (see IChannel#write) 
+  # @raise (see IChannel#write)
   #
   # @raise [IOError]
-  #   When _timeout_ seconds elapse & the channel remains unwritable.  
+  #   When _timeout_ seconds elapse & the channel remains unwritable.
   #
   def write!(object, timeout = 0.1)
     if @writer.closed?
@@ -85,7 +85,7 @@ class IChannel
   #
   # @return [Object]
   #   The object read from the channel.
-  #   
+  #
   def recv
     recv!(nil)
   end
@@ -94,19 +94,19 @@ class IChannel
   #
   # Receive an object from the channel.
   #
-  # Unlike {#recv}, which waits indefinitely until the channel becomes readable, 
-  # this method will raise an IOError when _timeout_ seconds elapse and the 
+  # Unlike {#recv}, which waits indefinitely until the channel becomes readable,
+  # this method will raise an IOError when _timeout_ seconds elapse and the
   # channel remains unreadable.
   #
   # @param [Numeric] timeout
   #   The number of seconds to wait for the channel to become readable.
-  #   
+  #
   # @raise [IOError]
   #   (see IChannel#recv)
-  #   
+  #
   # @raise [IOError]
   #   When _timeout_ seconds elapse & the channel remains unreadable.
-  #   
+  #
   # @return [Object]
   #   The object read from the channel.
   #
@@ -116,8 +116,7 @@ class IChannel
     end
     readable, _ = IO.select [@reader], nil, nil, timeout
     if readable
-      msg = readable[0].sysread 1024
-      @serializer.load msg
+      @serializer.load readable[0]
     else
       raise IOError, 'The channel cannot be read from.'
     end
@@ -129,11 +128,11 @@ class IChannel
   #   Returns true when the channel is readable.
   #
   def readable?
-    if @reader.closed? 
+    if @reader.closed?
       false
     else
       readable, _ = IO.select [@reader], nil, nil, 0
-      !! readable 
+      !! readable
     end
   end
 end
