@@ -73,8 +73,8 @@ class IChannel
     end
     _, writable, _ = IO.select nil, [@writer], nil, timeout
     if writable
-      serialized = @serializer.dump(object)
-      writable[0].syswrite "#{serialized}#{SEP}"
+      msg = @serializer.dump(object)
+      writable[0].syswrite "#{msg}#{SEP}"
     else
       raise IOError, 'The channel cannot be written to.'
     end
@@ -120,7 +120,7 @@ class IChannel
     end
     readable, _ = IO.select [@reader], nil, nil, timeout
     if readable
-      msg = readable[0].readline(SEP).chomp(SEP)
+      msg = readable[0].readline(SEP).chomp SEP
       @serializer.load msg
     else
       raise IOError, 'The channel cannot be read from.'
