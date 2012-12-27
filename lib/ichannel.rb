@@ -1,7 +1,7 @@
 require 'socket'
 class IChannel
-
   SEP = '_$_'
+  private_constant :SEP
 
   #
   # @param [#dump,#load] serializer
@@ -120,9 +120,8 @@ class IChannel
     end
     readable, _ = IO.select [@reader], nil, nil, timeout
     if readable
-      serialized = readable[0].readline(SEP).chomp(SEP)
-
-      @serializer.load serialized
+      msg = readable[0].readline(SEP).chomp(SEP)
+      @serializer.load msg
     else
       raise IOError, 'The channel cannot be read from.'
     end
