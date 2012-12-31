@@ -1,8 +1,9 @@
 require 'socket'
 class IChannel
   SEP = '_$_'
-  private_constant :SEP
-
+  if respond_to? :private_constant
+    private_constant :SEP 
+  end
   #
   # @param [#dump,#load] serializer
   #   Any object that implements dump, & load.
