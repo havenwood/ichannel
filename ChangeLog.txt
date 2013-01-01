@@ -1,32 +1,46 @@
+== HEAD
+	…
+== v5.1.0
+	* Remove restriction on size of message.
+
+	IChannel#get can read a message of any size(before hand it was limited to 
+	1MB in size). Thanks to @quezacoatl.
+
+	* IChannel#readable? no longer blocks.
+
+	IChannel#readable? no longer blocks for 0.1 seconds on IO.select call.
+	Thanks to quezacoatl(https://github.com/quezacoatl) for the initial 
+	implementation. 
+
 == v5.0.0
 	* Remove IChannel#empty?
 	
-		I think the #readable? method is all you need, and is a much more 
-		accurate description of what the method is asking. We cannot determine
-		if the channel is really empty, but we can ask if it is readable at the 
-		time you ask.
+	I think the #readable? method is all you need, and is a much more 
+	accurate description of what the method is asking. We cannot determine
+	if the channel is really empty, but we can ask if it is readable at the 
+	time you ask.
 
 == v4.1.0
 	* Add IChannel#readable?
 
-		A method that can tell you whether or not a read would block. 
-		When it returns true, a read shouldn't block, on the other hand
-		if it were false it'd likely block by the time you call #get.
+	A method that can tell you whether or not a read would block. 
+	When it returns true, a read shouldn't block, on the other hand
+	if it were false it'd likely block by the time you call #get.
 
 == v4.0.0
 	* Modify IChannel#empty?
 
-		It now returns true in case the underlying UNIXSocket being used as a 
-		reader is closed.
+	It now returns true in case the underlying UNIXSocket being used as a 
+	reader is closed.
 
 == v3.1.0
 	* Add IChannel#empty?.
 	
-		IChannel#empty? returns true when the channel is empty(nothing to read).
+	IChannel#empty? returns true when the channel is empty(nothing to read).
 	
 	* Micro speed improvement on #write!, & #recv! operations.
 
-		By passing nil instead of creating two empty arrays for every read/write 
-		operation we should see a very small improvement in their performance.
+	By passing nil instead of creating two empty arrays for every read/write 
+	operation we should see a very small improvement in their performance.
 
 	* Add ChangeLog.txt 
