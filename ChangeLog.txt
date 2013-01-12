@@ -1,5 +1,7 @@
-== HEAD
-	…
+== v5.1.1
+	* Change socket type to use TCP.
+	The use of UDP could result in bugs because of its unordered nature.
+
 == v5.1.0
 	* Remove restriction on size of message.
 	IChannel#get can read a message of any size(before hand it was limited to 

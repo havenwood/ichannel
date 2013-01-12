@@ -2,14 +2,14 @@ require 'socket'
 class IChannel
   SEP = '_$_'
   if respond_to? :private_constant
-    private_constant :SEP 
+    private_constant :SEP
   end
   #
   # @param [#dump,#load] serializer
   #   Any object that implements dump, & load.
   #
   def initialize(serializer)
-    @reader, @writer = UNIXSocket.pair Socket::SOCK_DGRAM
+    @reader, @writer = UNIXSocket.pair :STREAM
     @serializer = serializer
   end
 
