@@ -26,7 +26,6 @@ class IChannel
   #
   # @return [Boolean]
   #   Returns true when the channel has been closed.
-  #   Returns nil when the channel is already closed.
   #
   def close
     unless closed?
