@@ -1,14 +1,15 @@
 require_relative 'setup'
 class IChannelTest < Test::Unit::TestCase
   def setup
-    @channel = IChannel.new [YAML, Marshal, JSON].sample
+    serializer = Object.const_get ENV["SERIALIZER"] || "Marshal"
+    @channel = IChannel.new serializer
   end
 
   def teardown
     @channel.close
   end
 
-  def test_put_and_get 
+  def test_put_and_get
     pid = fork do
       @channel.put %w(a b c)
     end
@@ -31,7 +32,7 @@ class IChannelTest < Test::Unit::TestCase
   end
 
   def test_queued_messages
-    pid = fork do 
+    pid = fork do
       @channel.put %w(a)
       @channel.put %w(b)
     end

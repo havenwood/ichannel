@@ -5,5 +5,10 @@ rvm:
   # UNIXSocket#recvmsg iz not implemented on Rubinius yet.
   # - rbx-19mode
 
+env:
+  - SERIALIZER=YAML
+  - SERIALIZER=Marshal
+  - SERIALIZER=JSON
+
 notifications:
   email: true 
