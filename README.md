@@ -20,7 +20,7 @@ __EXAMPLES__
 
 __1.__
 
-The first example shows off how you'd pass Ruby objects through a channel.
+A demo of how to pass Ruby objects through a channel and also between processes.
 The serializer of choice is `Marshal` but it could just as easily be `JSON` or
 `YAML`.
 
