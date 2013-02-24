@@ -4,7 +4,7 @@ __OVERVIEW__
 | Project         | IChannel    
 |:----------------|:--------------------------------------------------
 | Homepage        | https://github.com/robgleeson/ichannel
-| Documentation   | http://rubydoc.info/gems/ichannel/frames 
+| Documentation   | http://rubydoc.info/github/robgleeson/ichannel/frames  
 | CI              | [![Build Status](https://travis-ci.org/robgleeson/ichannel.png)](https://travis-ci.org/robgleeson/ichannel)
 | Author          | Robert Gleeson             
 
