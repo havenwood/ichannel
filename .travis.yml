@@ -1,9 +1,8 @@
 rvm:
   - 1.9.2
   - 1.9.3
+  - 2.0.0
   - ruby-head
-  # UNIXSocket#recvmsg iz not implemented on Rubinius yet.
-  # - rbx-19mode
 
 env:
   - SERIALIZER=YAML
