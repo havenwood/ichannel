@@ -1,7 +1,7 @@
 __OVERVIEW__
 
 
-| Project         | IChannel    
+| Project         | ichannel   
 |:----------------|:--------------------------------------------------
 | Homepage        | https://github.com/robgleeson/ichannel
 | Documentation   | http://rubydoc.info/github/robgleeson/ichannel/frames  
@@ -11,18 +11,23 @@ __OVERVIEW__
 
 __DESCRIPTION__
 
-A modern, flexible & easy to use interprocess communication(IPC) primitive. The 
-basic premise is that you can "put" and "get" Ruby objects to/from a channel. 
-This works across any Ruby process & its subprocesses, though, which is why it 
-can be useful.  
+ichannel simplifies interprocess communication by providing a bi-directional
+channel that can transport ruby objects between processes on the same machine. 
+All communication on a channel occurs on a streamed UNIXSocket that a channel
+uses to queues its messages (ruby objects), and also to ensure that messages 
+are received in the order they are sent.
+
+In order to transport ruby objects through a channel the objects are serialized 
+before a write and deserialized after a read. The choice of serializer is left 
+up to you. A serializer can be any object that implements `dump` and
+`load` -- two methods that are usually implemented by serializers written in
+ruby.
 
 __EXAMPLES__
 
 __1.__
 
-A demo of how to pass Ruby objects through a channel and also between processes.
-The serializer of choice is `Marshal` but it could just as easily be `JSON` or
-`YAML`.
+A demo of how to pass ruby objects through a channel and also between processes:
 
 ```ruby
 channel = IChannel.new Marshal
@@ -35,51 +40,23 @@ channel.get # => Fixnum
 channel.get # => 'Hello!'
 ```
 
-__SERIALIZERS__
+__2.__
 
-To send Ruby objects between processes they have to be serialized, but on the
-bright side the number of serializers to choose from is vast. Marshal, JSON, & 
-YAML are supported out of the box to name a few but adding support for other 
-serializers is a trivial amount of work.
-
-For example, here is a MessagePack serializer you could use:
+MessagePack doesn't implement `dump` or `load` but a wrapper can be easily
+written:
 
 ```ruby
-require 'ichannel'
-require 'msgpack'
-serializer = Class.new do
+module MyMessagePack
   def self.dump(msg)
-    MessagePack.pack msg
+    MessagePack.pack(msg)
   end
 
   def self.load(msg)
-    MessagePack.unpack msg
+    MessagePack.unpack(msg)
   end
 end
-channel = IChannel.new serializer
+channel = IChannel.new MyMessagePack
 ```
-
-As you can see above as long as the serializer responds to `.dump` & `.load` it 
-can be passed as a serializer to IChannel.
-
-__REAL WORLD EXAMPLES__
- 
-I am using IChannel in a couple of my own personal projects:
-
- - [IProcess](https://github.com/robgleeson/iprocess)  
-    Provides a number of abstractions on top of spawning subprocesses and 
-    interprocess communication. IChannel was born inside IProcess but later 
-    extracted into its own project when I realised it could be useful on its
-    own.
-
- - [xpool](https://github.com/robgleeson/xpool)  
-    A lightweight UNIX(X) process pool implementation.
-
-
-Other people have started to write code on top of ichannel, too:
-  
-  - [ifuture](https://github.com/Havenwood/ifuture)  
-    An implementation of Futures for Ruby using process forks and ichannel.
 
 __PLATFORM SUPPORT__
 
@@ -97,6 +74,11 @@ _unsupported_
 __INSTALL__
 
     $ gem install ichannel
+
+__SEE ALSO__
+  
+  - [ifuture](https://github.com/Havenwood/ifuture)  
+    futures built on process forks and ichannel.
 
 __LICENSE__
 

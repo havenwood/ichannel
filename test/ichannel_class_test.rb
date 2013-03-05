@@ -27,7 +27,7 @@ class IChannelTest < Test::Unit::TestCase
   def test_get_on_closed_channel
     @channel.close
     assert_raises IOError do
-      @channel.put %w(b)
+      @channel.get
     end
   end
 
