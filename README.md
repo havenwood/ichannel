@@ -57,8 +57,9 @@ pid = fork do
 end
 until channel.readable?
   sleep 1
-  channel.get # => 42
 end
+Process.wait pid
+channel.get # => 42
 ```
 
 __3.__
