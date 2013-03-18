@@ -56,7 +56,7 @@ pid = fork do
   channel.put 42
 end
 until channel.readable?
-  sleep 1
+  # do something else
 end
 Process.wait pid
 channel.get # => 42
