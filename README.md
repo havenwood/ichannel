@@ -27,7 +27,9 @@ __EXAMPLES__
 
 __1.__
 
-A demo of how to pass ruby objects through a channel and also between processes:
+A demo of how to pass ruby objects through a channel and also between processes.
+[Marshal](http://rubydoc.info/stdlib/core/Marshal) is the serializer of choice 
+in this example: 
 
 ```ruby
 channel = IChannel.new Marshal
