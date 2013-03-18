@@ -17,17 +17,19 @@ All communication on a channel occurs on a streamed UNIXSocket that a channel
 uses to queues its messages (ruby objects), and also to ensure that messages 
 are received in the order they are sent.
 
-In order to transport ruby objects through a channel the objects are serialized 
-before a write and deserialized after a read. The choice of serializer is left 
-up to you. A serializer can be any object that implements `dump` and
-`load` -- two methods that are usually implemented by serializers written in
-ruby.
+__SERIALIZATION__
+
+ichannel relies on serialization when writing and reading from the underlying 
+UNIXSocket. A ruby object is serialized before a write, and it is deserialized 
+after a read. The choice of serializer is left up to you, though. A serializer 
+can be any object that implements `dump` and `load` -- two methods that are 
+usually implemented by serializers written in ruby.
 
 __EXAMPLES__
 
 __1.__
 
-A demo of how to pass ruby objects through a channel and also between processes.
+A demo of how to pass ruby objects through a channel and also between processes.  
 [Marshal](http://rubydoc.info/stdlib/core/Marshal) is the serializer of choice 
 in this example: 
 
