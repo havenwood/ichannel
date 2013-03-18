@@ -46,6 +46,23 @@ channel.get # => 'Hello!'
 
 __2.__
 
+Knowing when a channel is readable can be useful so that you can avoid a
+blocking read. This (bad) example demonstrates how to do that:
+
+```ruby
+channel = IChannel.new Marshal
+pid = fork do
+  sleep 3
+  channel.put 42
+end
+until channel.readable?
+  sleep 1
+  channel.get # => 42
+end
+```
+
+__3.__
+
 MessagePack doesn't implement `dump` or `load` but a wrapper can be easily
 written:
 
