@@ -133,7 +133,7 @@ class IChannel
   #   Returns true when the channel is readable.
   #
   def readable?
-    if @reader.closed?
+    if closed?
       false
     else
       readable, _ = IO.select [@reader], nil, nil, 0
