@@ -12,10 +12,10 @@ __OVERVIEW__
 __DESCRIPTION__
 
 ichannel simplifies interprocess communication by providing a bi-directional
-channel that can transport ruby objects between processes on the same machine. 
-All communication on a channel occurs on a streamed UNIXSocket that a channel
-uses to queues its messages (ruby objects), and also to ensure that messages 
-are received in the order they are sent.
+channel that can be used to transport ruby objects between processes on the same 
+machine. All communication on a channel occurs on a streamed UNIXSocket that a 
+channel uses to queues its messages (ruby objects), and also to ensure that 
+messages are received in the order they are sent.
 
 __SERIALIZATION__
 
