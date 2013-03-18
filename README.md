@@ -58,8 +58,8 @@ end
 until channel.readable?
   # do something else
 end
-Process.wait pid
 channel.get # => 42
+Process.wait pid
 ```
 
 __3.__
