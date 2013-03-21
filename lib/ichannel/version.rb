@@ -1,3 +1,3 @@
 class IChannel
-  VERSION = "5.1.1.4"
+  VERSION = "5.1.1.5"
 end
