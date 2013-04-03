@@ -17,13 +17,11 @@ machine. All communication on a channel occurs on a streamed UNIXSocket that a
 channel uses to queues its messages (ruby objects), and also to ensure that 
 messages are received in the order they are sent.
 
-__SERIALIZATION__
-
-ichannel relies on serialization when writing and reading from the underlying 
-UNIXSocket. A ruby object is serialized before a write, and it is deserialized 
-after a read. The choice of serializer is left up to you, though. A serializer 
-can be any object that implements `dump` and `load` -- two methods that are 
-usually implemented by serializers written in ruby.
+Underneath the hood ruby objects are serialized when writing and reading from the 
+underlying UNIXSocket. A ruby object is serialized before a write, and it is 
+deserialized after a read. The choice of serializer is left up to you, though. 
+A serializer can be any object that implements `dump` and `load` -- two methods 
+that are usually implemented by serializers written in ruby.
 
 __EXAMPLES__
 
