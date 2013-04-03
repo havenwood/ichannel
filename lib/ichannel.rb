@@ -11,6 +11,7 @@ class IChannel
   def initialize(serializer)
     @reader, @writer = UNIXSocket.pair :STREAM
     @serializer = serializer
+    @last_msg = nil
   end
 
   #
@@ -31,6 +32,7 @@ class IChannel
     unless closed?
       @reader.close
       @writer.close
+      @last_msg = nil
       true
     end
   end
@@ -80,6 +82,20 @@ class IChannel
     end
   end
   alias_method :put!, :write!
+
+  #
+  # Reads the last message written to the channel by reading until the channel
+  # is empty. The last message is cached and reset to nil on call to {#close}.
+  #
+  # @return [Object]
+  #   Returns the last message to be written to the channel.
+  #
+  def last_msg
+    while readable?
+      @last_msg = get
+    end
+    @last_msg
+  end
 
   #
   # Receive an object from the channel.

@@ -9,6 +9,26 @@ class IChannelTest < Test::Unit::TestCase
     @channel.close
   end
 
+  def test_last_msg
+    @channel.put %w(a)
+    @channel.put %w(b)
+    assert_equal %w(b), @channel.last_msg
+  end
+
+  def test_last_msg_cache
+    @channel.put %w(a)
+    2.times { assert_equal %w(a), @channel.last_msg }
+    @channel.close
+    assert_equal nil, @channel.last_msg
+  end
+
+  def test_bust_last_msg_cache
+    @channel.put %w(a)
+    assert_equal %w(a), @channel.last_msg
+    @channel.put %w(b)
+    2.times { assert_equal %w(b), @channel.last_msg }
+  end
+
   def test_put_and_get
     pid = fork do
       @channel.put %w(a b c)
