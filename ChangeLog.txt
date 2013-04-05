@@ -1,4 +1,4 @@
-== HEAD
+== v5.2.0
 	* add IChannel#last_msg.
 	Reads the last message written to the channel by reading until the channel
 	is empty. The last message is cached and reset to nil on call to #close.
