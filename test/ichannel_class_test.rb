@@ -9,6 +9,23 @@ class IChannelTest < Test::Unit::TestCase
     @channel.close
   end
 
+  def test_interface
+    %w(write
+    write!
+    get
+    get!
+    close
+    closed?
+    readable?
+    last_msg
+    put
+    put!
+    recv
+    recv!).each do |method|
+      assert @channel.respond_to? method
+    end
+  end
+
   def test_last_msg
     @channel.put %w(a)
     @channel.put %w(b)

@@ -1,6 +1,6 @@
 require 'socket'
 class IChannel
-  class UNIXSocket < Interface
+  class UNIXSocket
     SEP = '_$_'
     if respond_to? :private_constant
       private_constant :SEP
