@@ -1,11 +1,11 @@
 class IChannel
   require_relative "ichannel/unix_socket"
 
-  def self.unix(adapter_options)
-    UNIXSocket.new(adapter_options)
+  def self.unix(options)
+    UNIXSocket.new(options)
   end
 
-  def self.redis(adapter_options)
+  def self.redis(options)
     # TODO
   end
 end
