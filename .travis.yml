@@ -9,5 +9,8 @@ env:
   - SERIALIZER=Marshal
   - SERIALIZER=JSON
 
+services:
+  - redis-server
+
 notifications:
   email: true 
