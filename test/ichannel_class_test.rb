@@ -26,6 +26,12 @@ class IChannelTest < Test::Unit::TestCase
     end
   end
 
+  def test_serialization
+    @channel.put 42
+    dump = Marshal.dump @channel
+    assert_equal 42, Marshal.load(dump).get
+  end
+
   def test_last_msg
     @channel.put %w(a)
     @channel.put %w(b)

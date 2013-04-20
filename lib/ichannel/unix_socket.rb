@@ -5,14 +5,15 @@ class IChannel
     if respond_to? :private_constant
       private_constant :SEP
     end
+
     #
     # @param [#dump,#load] serializer
     #   Any object that implements dump, & load.
     #
     def initialize(adapter_options)
-      @reader, @writer = ::UNIXSocket.pair :STREAM
       @serializer = adapter_options.fetch :serializer, Marshal
       @last_msg = nil
+      @reader, @writer = ::UNIXSocket.pair :STREAM
     end
 
     #
@@ -156,6 +157,18 @@ class IChannel
         readable, _ = IO.select [@reader], nil, nil, 0
         !! readable
       end
+    end
+
+    # @api private
+    def marshal_load(array)
+      @serializer, reader, writer, @last_msg = array
+      @reader = ::UNIXSocket.for_fd(reader)
+      @writer = ::UNIXSocket.for_fd(writer)
+    end
+
+    # @api private
+    def marshal_dump
+      [@serializer, @reader.to_i, @writer.to_i, @last_msg]
     end
   end
 end
