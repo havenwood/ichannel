@@ -10,8 +10,8 @@ class IChannel
     # @param [#dump,#load] serializer
     #   Any object that implements dump, & load.
     #
-    def initialize(adapter_options)
-      @serializer = adapter_options.fetch :serializer, Marshal
+    def initialize(serializer = Marshal, adapter_options)
+      @serializer = serializer
       @last_msg = nil
       @reader, @writer = ::UNIXSocket.pair :STREAM
     end

@@ -2,7 +2,7 @@ require_relative 'setup'
 class IChannelTest < Test::Unit::TestCase
   def setup
     serializer = Object.const_get ENV["SERIALIZER"] || "Marshal"
-    @channel = IChannel.unix serializer: serializer
+    @channel = IChannel.unix serializer
   end
 
   def teardown
