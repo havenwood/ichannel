@@ -32,7 +32,7 @@ A demo of how to pass ruby objects through a channel and also between processes.
 in this example: 
 
 ```ruby
-channel = IChannel.new Marshal
+channel = IChannel.unix Marshal
 pid = fork do 
   channel.put Process.pid
   channel.put 'Hello!'
@@ -48,7 +48,7 @@ Knowing when a channel is readable can be useful so that you can avoid a
 blocking read. This (bad) example demonstrates how to do that:
 
 ```ruby
-channel = IChannel.new Marshal
+channel = IChannel.unix Marshal 
 pid = fork do
   sleep 3
   channel.put 42
@@ -75,7 +75,7 @@ module MyMessagePack
     MessagePack.unpack(msg)
   end
 end
-channel = IChannel.new MyMessagePack
+channel = IChannel.unix MyMessagePack
 ```
 
 __PLATFORM SUPPORT__

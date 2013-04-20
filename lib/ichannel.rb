@@ -6,6 +6,6 @@ class IChannel
   end
 
   def self.redis(options)
-    # TODO
+    raise NotImplementedError
   end
 end
