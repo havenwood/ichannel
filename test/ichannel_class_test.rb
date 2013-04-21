@@ -26,6 +26,15 @@ class IChannelTest < Test::Unit::TestCase
     end
   end
 
+  def test_serialization_in_fork
+    dump = Marshal.dump(@channel)
+    pid = fork do
+      Marshal.load(dump).put 42
+    end
+    Process.wait pid
+    assert_equal 42, @channel.get
+  end
+
   def test_serialization
     @channel.put 42
     dump = Marshal.dump @channel
