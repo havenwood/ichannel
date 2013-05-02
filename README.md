@@ -11,25 +11,29 @@ __OVERVIEW__
 
 __DESCRIPTION__
 
-ichannel simplifies interprocess communication by providing a bi-directional
-channel that can be used to transport ruby objects between processes on the same 
-machine. All communication on a channel occurs on a streamed UNIXSocket that a 
-channel uses to queues its messages (ruby objects), and also to ensure that 
-messages are received in the order they are sent.
+ichannel is a channel for interprocess communication between ruby processes on
+the same machine(or network). The basic idea is that you can "put" a ruby object
+onto the channel and on the other end(maybe in a different process, or maybe on
+a different machine) you can "get" the object from the channel.
 
-Underneath the hood ruby objects are serialized when writing and reading from the 
-underlying UNIXSocket. A ruby object is serialized before a write, and it is 
-deserialized after a read. The choice of serializer is left up to you, though. 
-A serializer can be any object that implements `dump` and `load` -- two methods 
-that are usually implemented by serializers written in ruby.
+The two main modes of transport are a UNIXSocket(streamed) or [redis](https://redis.io).
+A unix socket is fast and operates without any external dependencies but it
+can't go beyond a single machine. A channel that uses redis can operate between
+different machines on the same network. Regardless of mode, a channel has a
+single interface that doesn't change when using different modes of transport.
+
+A ruby object is serialized(on write) and deserialized(on read) when passing
+through a channel. A channel can use any serializer that implements the dump and
+load methods, and some examples of the serializers available to you are Marshal, 
+JSON, YAML, and MessagePack.
 
 __EXAMPLES__
 
 __1.__
 
 A demo of how to pass ruby objects through a channel and also between processes.  
-[Marshal](http://rubydoc.info/stdlib/core/Marshal) is the serializer of choice 
-in this example: 
+[Marshal](http://rubydoc.info/stdlib/core/Marshal) is the serializer of choice, 
+and a streamed UNIXSocket is mode of transport:
 
 ```ruby
 channel = IChannel.unix Marshal
@@ -45,7 +49,8 @@ channel.get # => 'Hello!'
 __2.__
 
 Knowing when a channel is readable can be useful so that you can avoid a
-blocking read. This (bad) example demonstrates how to do that:
+blocking read on the underlying UNIXSocket. This (bad) example demonstrates 
+how to do that:
 
 ```ruby
 channel = IChannel.unix Marshal 
