@@ -1,4 +1,4 @@
-class IChannel
+module IChannel
   require 'redis'
   require_relative "ichannel/unix_socket"
   require_relative "ichannel/redis"

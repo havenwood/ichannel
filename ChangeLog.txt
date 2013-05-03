@@ -1,5 +1,9 @@
 == HEAD
+	- change IChannel from being a class to a module.
+	There's no need to create an instance of IChannel anymore.
+
 	- Add IChannel::Redis.
+	Add Redis as a backend.
 
 == v0.6.0
 	- IChannel::UNIXSocket can now be serialized by Marshal.

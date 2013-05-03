@@ -1,5 +1,5 @@
 require 'socket'
-class IChannel
+module IChannel
   class UNIXSocket
     SEP = '_$_'
     if respond_to? :private_constant
