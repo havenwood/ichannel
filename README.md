@@ -19,7 +19,7 @@ a different machine) you can "get" the object from the channel.
 The two main modes of transport are a UNIXSocket(streamed) or [redis](https://redis.io).
 A unix socket is fast and operates without any external dependencies but it
 can't go beyond a single machine. A channel that uses redis can operate between
-different machines. And incase you're wondering a ichannel uses a 
+different machines. And incase you're wondering ichannel uses a 
 redis [list](http://redis.io/commands#list).
 
 A ruby object is serialized(on write) and deserialized(on read) when passing
