@@ -1,6 +1,6 @@
 require_relative 'setup'
-require_relative 'ichannel_class_test'
-class IChannelRedisTest < IChannelTest
+require_relative 'ichannel_unix_test'
+class IChannelRedisTest < IChannelUNIXTest
   def setup
     serializer = Object.const_get ENV["SERIALIZER"] || "Marshal"
     @channel = IChannel.redis serializer
