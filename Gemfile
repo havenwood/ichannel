@@ -4,5 +4,6 @@ group :development do
   gem "rake"
   gem "redcarpet"
   gem "yard"
+  gem "foreman"
 end
 gemspec
