@@ -1,6 +1,7 @@
 class IChannel::Redis
   def initialize(serializer, options)
     @serializer = serializer
+    @key = options.delete(:key) || "channel"
     @redis = ::Redis.new(options)
     @last_msg = nil
     @closed = false
@@ -30,7 +31,7 @@ class IChannel::Redis
     Timeout.timeout(timeout) do
       dump = @serializer.dump object
       # TODO: add option in API to name key.
-      @redis.lpush "channel", dump
+      @redis.lpush @key, dump
     end
   end
   alias_method :put!, :write!
@@ -48,7 +49,7 @@ class IChannel::Redis
     else
       Timeout.timeout(timeout) do
         # TODO: should @last_msg be set here?
-        dump = @redis.rpop "channel"
+        dump = @redis.rpop @key
         @serializer.load dump
       end
     end
@@ -63,7 +64,7 @@ class IChannel::Redis
   end
 
   def empty?
-    @redis.llen("channel") == 0
+    @redis.llen(@key) == 0
   end
 
   def readable?
