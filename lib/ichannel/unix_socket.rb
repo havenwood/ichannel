@@ -10,6 +10,8 @@ module IChannel
     # @param [#dump,#load] serializer
     #   Any object that implements dump, & load.
     #
+    # @return [IChannel::UNIXSocket]
+    #
     def initialize(serializer = Marshal, adapter_options)
       @serializer = serializer
       @last_msg = nil

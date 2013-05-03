@@ -11,20 +11,24 @@ __OVERVIEW__
 __DESCRIPTION__
 
 ichannel is a channel for interprocess communication between ruby processes on
-the same machine(or network). The basic idea is that you can "put" a ruby object
-onto the channel and on the other end(maybe in a different process, or maybe on
-a different machine) you can "get" the object from the channel.
+the same machine(or network). The basic premise is that you can "put" a ruby 
+object onto the channel and on the other end(maybe in a different process, 
+or maybe on a different machine) you can "get" the object from the channel.
 
 The two main modes of transport are a UNIXSocket(streamed) or [redis](https://redis.io).
 A unix socket is fast and operates without any external dependencies but it
 can't go beyond a single machine. A channel that uses redis can operate between
 different machines. And incase you're wondering ichannel uses a 
-redis [list](http://redis.io/commands#list) to queue messages.
+redis [list](http://redis.io/commands#list) to queue messages. 
 
 The last topic I feel I should talk about before the examples is serialization. 
 A ruby object is serialized(on write) and deserialized(on read) when passing
 through a channel. A channel can use any serializer that implements the dump and
-load methods. The default is [Marshal](http://ruby-doc.org/core-2.0/Marshal.html).
+load methods but the default is [Marshal](http://ruby-doc.org/core-2.0/Marshal.html).
+There are also a number of objects that cannot be serialized (such as IO, 
+anonymous classes/modules, Proc, …) but I've found most of the time I send
+simple objects like Hash.
+
 
 __EXAMPLES__
 
@@ -109,6 +113,13 @@ _unsupported_
   * Rubinius (support for Rubinius will come sometime in the future).
 
 __INSTALL__
+
+If you plan on using redis you'll need to install the 'redis' gem. It's
+optional:
+
+    $ gem install redis
+
+And to finish:
 
     $ gem install ichannel
 

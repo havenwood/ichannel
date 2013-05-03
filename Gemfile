@@ -6,4 +6,5 @@ group :development do
   gem "yard"
   gem "foreman"
 end
+gem "redis"
 gemspec
