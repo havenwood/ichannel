@@ -27,24 +27,24 @@ class IChannelUNIXTest < Test::Unit::TestCase
   end
 
   def test_last_msg_after_read
-    @channel.put 42
+    @channel.put [42]
     @channel.get
-    assert_equal 42, @channel.last_msg
+    assert_equal [42], @channel.last_msg
   end
 
   def test_serialization_in_fork
     dump = Marshal.dump(@channel)
     pid = fork do
-      Marshal.load(dump).put 42
+      Marshal.load(dump).put [42]
     end
     Process.wait pid
-    assert_equal 42, @channel.get
+    assert_equal [42], @channel.get
   end
 
   def test_serialization
-    @channel.put 42
+    @channel.put [42]
     dump = Marshal.dump @channel
-    assert_equal 42, Marshal.load(dump).get
+    assert_equal [42], Marshal.load(dump).get
   end
 
   def test_last_msg
