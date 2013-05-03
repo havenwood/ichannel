@@ -19,7 +19,8 @@ a different machine) you can "get" the object from the channel.
 The two main modes of transport are a UNIXSocket(streamed) or [redis](https://redis.io).
 A unix socket is fast and operates without any external dependencies but it
 can't go beyond a single machine. A channel that uses redis can operate between
-different machines on the same network. 
+different machines. And incase you're wondering a ichannel uses a 
+redis [list](http://redis.io/commands#list).
 
 A ruby object is serialized(on write) and deserialized(on read) when passing
 through a channel. A channel can use any serializer that implements the dump and
@@ -64,6 +65,19 @@ Process.wait pid
 ```
 
 __3.__
+
+A demo of how to use ichannel with Redis:
+
+```ruby
+channel = IChannel.redis
+channel.put %w(a)
+
+# In another process, far away…
+channel = IChannel.redis
+channel.get # => ["a"]
+```
+
+__4.__
 
 MessagePack doesn't implement `dump` or `load` but a wrapper can be easily
 written:
