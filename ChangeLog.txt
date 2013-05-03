@@ -1,3 +1,6 @@
+== HEAD
+	- Add IChannel::Redis.
+
 == v0.6.0
 	- IChannel::UNIXSocket can now be serialized by Marshal.
 	IChannel::UNIXSocket can be serialized by Marshal but there's a gotcha: it
