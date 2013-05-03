@@ -19,8 +19,9 @@ The two main modes of transport are a UNIXSocket(streamed) or [redis](https://re
 A unix socket is fast and operates without any external dependencies but it
 can't go beyond a single machine. A channel that uses redis can operate between
 different machines. And incase you're wondering ichannel uses a 
-redis [list](http://redis.io/commands#list).
+redis [list](http://redis.io/commands#list) to queue messages.
 
+The last topic I feel I should talk about before the examples is serialization. 
 A ruby object is serialized(on write) and deserialized(on read) when passing
 through a channel. A channel can use any serializer that implements the dump and
 load methods. The default is [Marshal](http://ruby-doc.org/core-2.0/Marshal.html).
