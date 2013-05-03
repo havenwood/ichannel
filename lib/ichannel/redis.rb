@@ -47,6 +47,7 @@ class IChannel::Redis
       raise IOError, 'The channel cannot be read from (empty).'
     else
       Timeout.timeout(timeout) do
+        # TODO: should @last_msg be set here?
         dump = @redis.rpop "channel"
         @serializer.load dump
       end
