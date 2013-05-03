@@ -1,11 +1,11 @@
 class IChannel
   require_relative "ichannel/unix_socket"
 
-  def self.unix(options)
-    UNIXSocket.new(options)
+  def self.unix(serializer = Marshal, options = {})
+    UNIXSocket.new serializer, options
   end
 
-  def self.redis(options)
+  def self.redis(serializer = Marshal, options = {})
     raise NotImplementedError
   end
 end

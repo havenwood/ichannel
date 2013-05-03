@@ -19,13 +19,11 @@ a different machine) you can "get" the object from the channel.
 The two main modes of transport are a UNIXSocket(streamed) or [redis](https://redis.io).
 A unix socket is fast and operates without any external dependencies but it
 can't go beyond a single machine. A channel that uses redis can operate between
-different machines on the same network. Regardless of mode, a channel has a
-single interface that doesn't change when using different modes of transport.
+different machines on the same network. 
 
 A ruby object is serialized(on write) and deserialized(on read) when passing
 through a channel. A channel can use any serializer that implements the dump and
-load methods, and some examples of the serializers available to you are Marshal, 
-JSON, YAML, and MessagePack.
+load methods. The default is [Marshal](http://ruby-doc.org/core-2.0/Marshal.html).
 
 __EXAMPLES__
 
