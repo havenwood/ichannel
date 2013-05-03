@@ -141,7 +141,7 @@ module IChannel
       readable, _ = IO.select [@reader], nil, nil, timeout
       if readable
         msg = readable[0].readline(SEP).chomp SEP
-        @serializer.load msg
+        @last_msg = @serializer.load msg
       else
         raise IOError, 'The channel cannot be read from.'
       end

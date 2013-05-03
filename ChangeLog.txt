@@ -1,4 +1,8 @@
 == HEAD
+	- Redis#last_msg, UNIXSocket#last_msg changes.
+	The last_msg method returns the last value read by #get when a channel is
+	not readable.
+
 	- change IChannel from being a class to a module.
 	There's no need to create an instance of IChannel anymore.
 

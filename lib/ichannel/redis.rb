@@ -121,7 +121,7 @@ class IChannel::Redis
       Timeout.timeout(timeout) do
         # TODO: should @last_msg be set here?
         dump = @redis.rpop @key
-        @serializer.load dump
+        @last_msg = @serializer.load dump
       end
     end
   end
