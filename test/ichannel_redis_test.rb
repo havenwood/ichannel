@@ -7,6 +7,8 @@ class IChannelRedisTest < IChannelTest
   end
 
   def teardown
+    key = @channel.instance_variable_get :@key
+    @channel.instance_variable_get(:@redis).del(key)
     @channel.close
   end
 
