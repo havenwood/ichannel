@@ -11,24 +11,9 @@ __OVERVIEW__
 __DESCRIPTION__
 
 ichannel is a channel for interprocess communication between ruby processes on
-the same machine(or network). The basic premise is that you can "put" a ruby 
+the same machine or network. The basic premise is that you can "put" a ruby 
 object onto the channel and on the other end(maybe in a different process, 
 or maybe on a different machine) you can "get" the object from the channel.
-
-The two main modes of transport are a UNIXSocket(streamed) or [redis](https://redis.io).
-A unix socket is fast and operates without any external dependencies but it
-can't go beyond a single machine. A channel that uses redis can operate between
-different machines. And incase you're wondering ichannel uses a 
-redis [list](http://redis.io/commands#list) to queue messages. 
-
-The last topic I feel I should talk about before the examples is serialization. 
-A ruby object is serialized(on write) and deserialized(on read) when passing
-through a channel. A channel can use any serializer that implements the dump and
-load methods but the default is [Marshal](http://ruby-doc.org/core-2.0/Marshal.html).
-There are also a number of objects that cannot be serialized (such as IO, 
-anonymous classes/modules, Proc, …) but I've found most of the time I send
-simple objects like Hash.
-
 
 __EXAMPLES__
 
@@ -70,14 +55,15 @@ Process.wait pid
 
 __3.__
 
-A demo of how to use ichannel with Redis:
+A demo of a channel sending messages between machines by using
+[redis](https://redis.io) as a backend:
 
 ```ruby
-channel = IChannel.redis
+channel = IChannel.redis Marshal, key: "readme-example"
 channel.put %w(a)
 
-# In another process, far away…
-channel = IChannel.redis
+# In another process, on another machine, far away…
+channel = IChannel.redis Marshal, key: "readme-example"
 channel.get # => ["a"]
 ```
 
