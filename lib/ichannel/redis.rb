@@ -79,7 +79,6 @@ class IChannel::Redis
     end
     Timeout.timeout(timeout) do
       dump = @serializer.dump object
-      # TODO: add option in API to name key.
       @redis.lpush @key, dump
     end
   end
@@ -119,7 +118,6 @@ class IChannel::Redis
       raise IOError, 'The channel cannot be read from (empty).'
     else
       Timeout.timeout(timeout) do
-        # TODO: should @last_msg be set here?
         dump = @redis.rpop @key
         @last_msg = @serializer.load dump
       end
