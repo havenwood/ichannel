@@ -89,11 +89,9 @@ __PLATFORM SUPPORT__
 
 _supported_
 
-  * CRuby (1.9+)
-  
+  * CRuby (1.9+)  
   * Rubinius (1.9+)
-  
-  * JRuby (1.9+ - some tests skipped)
+  * JRuby (1.9+ - some tests skipped)  
     JRuby is supported and passes the test suite but it has a few skips.
     Three skips are because jruby does not implement Kernel.fork and one
     looks like a possible bug in JRuby's Marshal when trying to deserialize 
