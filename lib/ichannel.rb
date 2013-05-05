@@ -1,7 +1,5 @@
 module IChannel
-  require 'redis'
   require_relative "ichannel/unix_socket"
-  require_relative "ichannel/redis"
 
   #
   # @param
@@ -22,9 +20,9 @@ module IChannel
   #   (see Redis#initialize)
   #
   def self.redis(serializer = Marshal, options = {})
-    unless defined?(::Redis)
-      require 'redis'
+    unless defined?(IChannel::Redis)
+      require_relative "ichannel/redis"
     end
-    Redis.new serializer, options
+    IChannel::Redis.new serializer, options
   end
 end

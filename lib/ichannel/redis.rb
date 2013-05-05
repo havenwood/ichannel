@@ -1,5 +1,5 @@
+require "redis"
 class IChannel::Redis
-
   #
   # @param [#dump,#load] serializer
   #   A serializer.

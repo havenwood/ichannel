@@ -14,7 +14,7 @@ ichannel is a channel for interprocess communication between ruby processes on
 the same machine or network. The basic premise is that you can "put" a ruby 
 object onto the channel and on the other end(maybe in a different process, 
 or maybe on a different machine) you can "get" the object from the channel.
-
+ 
 __EXAMPLES__
 
 __1.__
@@ -87,16 +87,22 @@ channel = IChannel.unix MyMessagePack
 
 __PLATFORM SUPPORT__
 
+JRuby is supported and passes the test suite but it has a few skips.
+Three skips are because jruby does not implement Kernel.fork and one
+looks like a possible bug in JRuby's Marshal when trying to deserialize 
+a channel that uses a unix socket. The other 24 tests pass on jruby, &
+those tests cover both unix sockets & redis.
+
 _supported_
 
   * CRuby (1.9+)
+  * Rubinius (1.9+ - 2.0.0rc1 may not work with unix sockets, if not please use rbx-head.)
+  * JRuby (1.9+ - some tests skipped)
 
 _unsupported_
-  
-  * CRuby 1.8
+
+  * Any 1.8 implementation  
   * MacRuby
-  * JRuby
-  * Rubinius (support for Rubinius will come sometime in the future).
 
 __INSTALL__
 

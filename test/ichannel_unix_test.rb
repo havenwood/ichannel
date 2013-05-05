@@ -33,6 +33,9 @@ class IChannelUNIXTest < Test::Unit::TestCase
   end
 
   def test_serialization_in_fork
+    if RUBY_ENGINE == "jruby"
+      skip "jruby does not implement Kernel.fork"
+    end
     dump = Marshal.dump(@channel)
     pid = fork do
       Marshal.load(dump).put [42]
@@ -42,11 +45,25 @@ class IChannelUNIXTest < Test::Unit::TestCase
   end
 
   def test_serialization
+    if RUBY_ENGINE == "jruby"
+      skip "fails on jruby"
+    end
     @channel.put [42]
     dump = Marshal.dump @channel
     assert_equal [42], Marshal.load(dump).get
   end
 
+  def test_fork
+    if RUBY_ENGINE == "jruby"
+      skip "jruby does not implement Kernel.fork"
+    end
+    pid = fork do
+      @channel.put [42]
+    end
+    Process.wait pid
+    assert_equal [42], @channel.get
+  end
+  
   def test_last_msg
     @channel.put %w(a)
     @channel.put %w(b)
@@ -67,14 +84,6 @@ class IChannelUNIXTest < Test::Unit::TestCase
     2.times { assert_equal %w(b), @channel.last_msg }
   end
 
-  def test_put_and_get
-    pid = fork do
-      @channel.put %w(a b c)
-    end
-    Process.wait pid
-    assert_equal %w(a b c), @channel.get
-  end
-
   def test_put_on_closed_channel
     @channel.close
     assert_raises IOError do
@@ -90,11 +99,8 @@ class IChannelUNIXTest < Test::Unit::TestCase
   end
 
   def test_queued_messages
-    pid = fork do
-      @channel.put %w(a)
-      @channel.put %w(b)
-    end
-    Process.wait pid
+    @channel.put %w(a)
+    @channel.put %w(b)
     assert_equal %w(a), @channel.get
     assert_equal %w(b), @channel.get
   end

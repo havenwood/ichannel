@@ -1,3 +1,11 @@
+== v6.1.1
+	- Add support for Rubinius, JRuby (1.9+ mode)
+
+	- Fix the optional dependency on Redis.
+	This was totally broken :/ We explicitly required Redis in lib/ichannel.rb.
+	Now we require "ichannel/redis" when IChannel.redis is invoked, which in turn
+	requires "redis", so the dependency is only exposed when invoking that method.
+
 == v6.1.0
 	- Redis#last_msg, UNIXSocket#last_msg changes.
 	The last_msg method returns the last value read by #get when a channel is
