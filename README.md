@@ -87,17 +87,18 @@ channel = IChannel.unix MyMessagePack
 
 __PLATFORM SUPPORT__
 
-JRuby is supported and passes the test suite but it has a few skips.
-Three skips are because jruby does not implement Kernel.fork and one
-looks like a possible bug in JRuby's Marshal when trying to deserialize 
-a channel that uses a unix socket. The other 24 tests pass on jruby, &
-those tests cover both unix sockets & redis.
-
 _supported_
 
   * CRuby (1.9+)
-  * Rubinius (1.9+ - 2.0.0rc1 may not work with unix sockets, if not please use rbx-head.)
+  
+  * Rubinius (1.9+)
+  
   * JRuby (1.9+ - some tests skipped)
+    JRuby is supported and passes the test suite but it has a few skips.
+    Three skips are because jruby does not implement Kernel.fork and one
+    looks like a possible bug in JRuby's Marshal when trying to deserialize 
+    a channel that uses a unix socket. The other 24 tests pass on jruby, &
+    those tests cover both unix sockets & redis.
 
 _unsupported_
 

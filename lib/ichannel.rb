@@ -1,4 +1,5 @@
 module IChannel
+  require "timeout"
   require_relative "ichannel/unix_socket"
 
   #
