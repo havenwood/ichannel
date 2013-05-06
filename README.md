@@ -4,6 +4,7 @@ __OVERVIEW__
 |:----------------|:--------------------------------------------------
 | Homepage        | https://github.com/robgleeson/ichannel
 | Documentation   | http://rubydoc.info/github/robgleeson/ichannel/frames  
+| Metrics         | [![Code Climate](https://codeclimate.com/github/robgleeson/ichannel.png)](https://codeclimate.com/github/robgleeson/ichannel)
 | CI              | [![Build Status](https://travis-ci.org/robgleeson/ichannel.png)](https://travis-ci.org/robgleeson/ichannel)
 | Author          | Robert Gleeson             
 
@@ -14,19 +15,15 @@ ichannel is a channel for interprocess communication between ruby processes on
 the same machine or network. The basic premise is that you can "put" a ruby 
 object onto the channel and on the other end(maybe in a different process, 
 or maybe on a different machine) you can "get" the object from the channel.
- 
-The two main modes of transport are a [UNIXSocket](http://www.ruby-doc.org/stdlib-2.0/libdoc/socket/rdoc/UNIXSocket.html) 
-and [redis](https://redis.io). A (unbound) unix socket is local to one machine but it can 
-act as a queue, it has no external dependencies, & it shares the same interface
-as its redis counterpart. A redis channel can do all of the above but also expand 
-its reach beyond one machine by sending and receiving messages from other 
-channels running on different machines. 
+A [unix socket](http://www.ruby-doc.org/stdlib-2.0/libdoc/socket/rdoc/UNIXSocket.html)
+(local to a single machine)  or [redis](https://redis.io) can be used for 
+transport.
 
 A channel depends on a serializer when reading and writing from the underlying 
-transport(i.e: redis or a unix socket) but the choice of serializer is up
-to you. The default is set to be [Marshal](http://ruby-doc.org/core-2.0/Marshal.html) 
-but a serializer can be any object that implements dump and load. A few off the top of
-my head would be JSON, YAML, or MessagePack(with a wrapper, see examples).
+socket(e.g: redis or a unix socket) but you can use any serializer that 
+implements the dump and load methods. The default is set to be 
+[Marshal](http://ruby-doc.org/core-2.0/Marshal.html)  since it is apart of core
+ruby but you could also use JSON, YAML, or even MessagePack.
 
 __EXAMPLES__
 
@@ -46,8 +43,21 @@ Process.wait pid
 channel.get # => Fixnum
 channel.get # => 'Hello!'
 ```
-
 __2.__
+
+A demo of a channel sending messages between machines by using
+[redis](https://redis.io) as a backend:
+
+```ruby
+channel = IChannel.redis Marshal, key: "readme-example"
+channel.put %w(a)
+
+# In another process, on another machine, far away…
+channel = IChannel.redis Marshal, key: "readme-example"
+channel.get # => ["a"]
+```
+
+__3.__
 
 Knowing when a channel is readable can be useful so that you can avoid a
 blocking read on the underlying UNIXSocket. This (bad) example demonstrates 
@@ -64,20 +74,6 @@ until channel.readable?
 end
 channel.get # => 42
 Process.wait pid
-```
-
-__3.__
-
-A demo of a channel sending messages between machines by using
-[redis](https://redis.io) as a backend:
-
-```ruby
-channel = IChannel.redis Marshal, key: "readme-example"
-channel.put %w(a)
-
-# In another process, on another machine, far away…
-channel = IChannel.redis Marshal, key: "readme-example"
-channel.get # => ["a"]
 ```
 
 __4.__
