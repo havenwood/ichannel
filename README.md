@@ -22,6 +22,12 @@ as its redis counterpart. A redis channel can do all of the above but also expan
 its reach beyond one machine by sending and receiving messages from other 
 channels running on different machines. 
 
+A channel depends on a serializer when reading and writing from the underlying 
+transport(i.e: redis or a unix socket) but the choice of serializer is up
+to you. The default is set to be [Marshal](http://ruby-doc.org/core-2.0/Marshal.html) 
+but a serializer can be any object that implements dump and load. A few off the top of
+my head would be JSON, YAML, or MessagePack(with a wrapper, see examples).
+
 __EXAMPLES__
 
 __1.__
