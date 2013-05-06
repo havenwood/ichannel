@@ -1,4 +1,4 @@
-__OVERVIEW__
+__OVERVIEW__  
 
 | Project         | ichannel   
 |:----------------|:--------------------------------------------------
@@ -15,6 +15,13 @@ the same machine or network. The basic premise is that you can "put" a ruby
 object onto the channel and on the other end(maybe in a different process, 
 or maybe on a different machine) you can "get" the object from the channel.
  
+The two main modes of transport are a [UNIXSocket](http://www.ruby-doc.org/stdlib-2.0/libdoc/socket/rdoc/UNIXSocket.html) 
+and [redis](https://redis.io). A (unbound) unix socket is local to one machine but it can 
+act as a queue, it has no external dependencies, & it shares the same interface
+as its redis counterpart. A redis channel can do all of the above but also expand 
+its reach beyond one machine by sending and receiving messages from other 
+channels running on different machines. 
+
 __EXAMPLES__
 
 __1.__
