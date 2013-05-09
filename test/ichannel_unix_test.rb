@@ -32,27 +32,6 @@ class IChannelUNIXTest < Test::Unit::TestCase
     assert_equal [42], @channel.last_msg
   end
 
-  def test_serialization_in_fork
-    if RUBY_ENGINE == "jruby"
-      skip "jruby does not implement Kernel.fork"
-    end
-    dump = Marshal.dump(@channel)
-    pid = fork do
-      Marshal.load(dump).put [42]
-    end
-    Process.wait pid
-    assert_equal [42], @channel.get
-  end
-
-  def test_serialization
-    if RUBY_ENGINE == "jruby"
-      skip "fails on jruby"
-    end
-    @channel.put [42]
-    dump = Marshal.dump @channel
-    assert_equal [42], Marshal.load(dump).get
-  end
-
   def test_fork
     if RUBY_ENGINE == "jruby"
       skip "jruby does not implement Kernel.fork"

@@ -11,7 +11,4 @@ class IChannelRedisTest < IChannelUNIXTest
     @channel.instance_variable_get(:@redis).del(key)
     @channel.close
   end
-
-  def test_serialization() end
-  def test_serialization_in_fork() end
 end
