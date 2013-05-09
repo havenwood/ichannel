@@ -1,3 +1,10 @@
+== HEAD
+   - Remove serialization support for IChannel::UNIXSocket.
+   The support is severely limited and the source of too many 
+   edge cases to continue support. Even if serialization was 
+   limited to a single machine it only works under specific 
+   circumstances.
+
 == v6.1.1.1
    - Documentation improvements
 

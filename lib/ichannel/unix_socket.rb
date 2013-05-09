@@ -160,17 +160,5 @@ module IChannel
         !! readable
       end
     end
-
-    # @api private
-    def marshal_load(array)
-      @serializer, reader, writer, @last_msg = array
-      @reader = ::UNIXSocket.for_fd(reader)
-      @writer = ::UNIXSocket.for_fd(writer)
-    end
-
-    # @api private
-    def marshal_dump
-      [@serializer, @reader.to_i, @writer.to_i, @last_msg]
-    end
   end
 end
