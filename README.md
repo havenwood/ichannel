@@ -50,11 +50,11 @@ A demo of a channel sending messages between machines by using
 [redis](https://redis.io) for transport:
 
 ```ruby
-channel = IChannel.redis Marshal, key: "readme-example"
+channel = IChannel.redis Marshal, host: "10.0.0.1", key: "readme-example"
 channel.put %w(a)
 
 # In another process, on another machine, far away…
-channel = IChannel.redis Marshal, key: "readme-example"
+channel = IChannel.redis Marshal, host: "10.0.0.1", key: "readme-example"
 channel.get # => ["a"]
 ```
 
