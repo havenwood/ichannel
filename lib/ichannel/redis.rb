@@ -114,10 +114,11 @@ class IChannel::Redis
   def recv!(timeout = 0.1)
     if closed?
       raise IOError, 'The channel cannot be read from (closed).'
-    elsif empty?
-      raise IOError, 'The channel cannot be read from (empty).'
     else
       Timeout.timeout(timeout) do
+        while empty?
+          sleep 0.01
+        end
         dump = @redis.rpop @key
         @last_msg = @serializer.load dump
       end

@@ -1,8 +1,12 @@
 == HEAD
+   - IChannel::Redis#get blocks.
+   Like its ::UNIXSocket counterpart a read on an empty channel should
+   block.
+
    - Remove serialization support for IChannel::UNIXSocket.
-   The support is severely limited and the source of too many 
-   edge cases to continue support. Even if serialization was 
-   limited to a single machine it only works under specific 
+   The support is severely limited and the source of too many
+   edge cases to continue support. Even if serialization was
+   limited to a single machine it only works under specific
    circumstances.
 
 == v6.1.1.1
@@ -31,15 +35,15 @@
    - IChannel::UNIXSocket can now be serialized by Marshal.
    IChannel::UNIXSocket can be serialized by Marshal but there's a gotcha: it
    only really works on the same machine between one or more Ruby processes.
-   The UNIXSocket#marshal_dump method is implemented to dump the FDs in an array, 
-   so this feature won't fair well across different machines or time but I've 
+   The UNIXSocket#marshal_dump method is implemented to dump the FDs in an array,
+   so this feature won't fair well across different machines or time but I've
    found this feature useful nonetheless.
 
    - add IChannel.unix(…)
    Returns an instance of IChannel::UNIXSocket.
 
    - add IChannel::UNIXSocket
-   rename IChannel as IChannel::UNIXSocket in preparation for multiple 
+   rename IChannel as IChannel::UNIXSocket in preparation for multiple
    backends(UNIXSocket, Redis, …).
 
 == v5.2.0
@@ -57,29 +61,29 @@
 
 == v5.1.0
    - Remove restriction on size of message.
-   IChannel#get can read a message of any size(before hand it was limited to 
+   IChannel#get can read a message of any size(before hand it was limited to
    1MB in size). Thanks to @quezacoatl.
 
    - IChannel#readable? no longer blocks.
    IChannel#readable? no longer blocks for 0.1 seconds on IO.select call.
-   Thanks to quezacoatl(https://github.com/quezacoatl) for the initial 
-   implementation. 
+   Thanks to quezacoatl(https://github.com/quezacoatl) for the initial
+   implementation.
 
 == v5.0.0
    - Remove IChannel#empty?
-   I think the #readable? method is all you need, and is a much more 
+   I think the #readable? method is all you need, and is a much more
    accurate description of what the method is asking. We cannot determine
-   if the channel is really empty, but we can ask if it is readable at the 
+   if the channel is really empty, but we can ask if it is readable at the
    time you ask.
 
 == v4.1.0
    - Add IChannel#readable?
-   A method that can tell you whether or not a read would block. 
+   A method that can tell you whether or not a read would block.
    When it returns true, a read shouldn't block, on the other hand
    if it were false it'd likely block by the time you call #get.
 == v4.0.0
    - Modify IChannel#empty?
-   It now returns true in case the underlying UNIXSocket being used as a 
+   It now returns true in case the underlying UNIXSocket being used as a
    reader is closed.
 
 == v3.1.0
@@ -87,7 +91,7 @@
    IChannel#empty? returns true when the channel is empty(nothing to read).
 
    - Micro speed improvement on #write!, & #recv! operations.
-   By passing nil instead of creating two empty arrays for every read/write 
+   By passing nil instead of creating two empty arrays for every read/write
    operation we should see a very small improvement in their performance.
 
-   - Add ChangeLog.txt 
+   - Add ChangeLog.txt

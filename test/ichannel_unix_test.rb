@@ -26,6 +26,12 @@ class IChannelUNIXTest < Test::Unit::TestCase
     end
   end
 
+  def test_blocking_get
+    assert_raises Timeout::Error do
+      Timeout.timeout(1) { @channel.get }
+    end
+  end
+
   def test_last_msg_after_read
     @channel.put [42]
     @channel.get
@@ -42,7 +48,7 @@ class IChannelUNIXTest < Test::Unit::TestCase
     Process.wait pid
     assert_equal [42], @channel.get
   end
-  
+
   def test_last_msg
     @channel.put %w(a)
     @channel.put %w(b)
