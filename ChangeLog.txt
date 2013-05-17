@@ -1,4 +1,7 @@
 == HEAD
+   - IChannel::UNIXSocket#get! raises a Timeout::Error on timed out read.
+   Like its ::Redis counterpart.
+
    - IChannel::Redis#get blocks.
    Like its ::UNIXSocket counterpart a read on an empty channel should
    block.

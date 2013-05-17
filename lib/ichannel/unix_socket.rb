@@ -128,7 +128,7 @@ module IChannel
     # @raise [IOError]
     #   (see IChannel#recv)
     #
-    # @raise [IOError]
+    # @raise [Timeout::Error]
     #   When _timeout_ seconds elapse & the channel remains unreadable.
     #
     # @return [Object]
@@ -143,7 +143,7 @@ module IChannel
         msg = readable[0].readline(SEP).chomp SEP
         @last_msg = @serializer.load msg
       else
-        raise IOError, 'The channel cannot be read from.'
+        raise Timeout::Error, 'Time out on read (waited for %s second(s))' % [timeout]
       end
     end
     alias_method :get!, :recv!

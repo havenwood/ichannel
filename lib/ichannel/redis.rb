@@ -106,7 +106,7 @@ class IChannel::Redis
   #   When the channel is closed or empty.
   #
   # @raise [Timeout::Error]
-  #   When the read does not complete in time.
+  #   When _timeout_ seconds elapse and the channel remains unreadable.
   #
   # @return [Object]
   #   The object read from the channel.

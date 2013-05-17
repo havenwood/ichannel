@@ -32,6 +32,12 @@ class IChannelUNIXTest < Test::Unit::TestCase
     end
   end
 
+  def test_timeout_on_get
+    assert_raises Timeout::Error do
+      @channel.get! 0.1
+    end
+  end
+
   def test_last_msg_after_read
     @channel.put [42]
     @channel.get
