@@ -1,3 +1,3 @@
-module IChannel
+class IChannel
   VERSION = "6.1.1.1"
 end

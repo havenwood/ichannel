@@ -1,7 +1,7 @@
-module IChannel
-  require "timeout"
-  require_relative "ichannel/unix_socket"
-
+require_relative "ichannel/channel"
+require_relative "ichannel/unix_socket"
+require_relative "ichannel/redis"
+class IChannel
   #
   # @param
   #   (see UNIXSocket#initialize)
@@ -10,7 +10,7 @@ module IChannel
   #   (see UNIXSocket#initialize)
   #
   def self.unix(serializer = Marshal, options = {})
-    UNIXSocket.new serializer, options
+    IChannel::UNIXSocket.new serializer, options
   end
 
   #
@@ -21,9 +21,6 @@ module IChannel
   #   (see Redis#initialize)
   #
   def self.redis(serializer = Marshal, options = {})
-    unless defined?(IChannel::Redis)
-      require_relative "ichannel/redis"
-    end
     IChannel::Redis.new serializer, options
   end
 end
