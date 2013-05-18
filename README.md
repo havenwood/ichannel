@@ -1,41 +1,42 @@
 __OVERVIEW__
 
-
-| Project         | ichannel   
+| Project         | ichannel
 |:----------------|:--------------------------------------------------
 | Homepage        | https://github.com/robgleeson/ichannel
-| Documentation   | http://rubydoc.info/github/robgleeson/ichannel/frames  
+| Documentation   | http://rubydoc.info/github/robgleeson/ichannel/frames
+| Metrics         | [![Code Climate](https://codeclimate.com/github/robgleeson/ichannel.png)](https://codeclimate.com/github/robgleeson/ichannel)
 | CI              | [![Build Status](https://travis-ci.org/robgleeson/ichannel.png)](https://travis-ci.org/robgleeson/ichannel)
-| Author          | Robert Gleeson             
+| Author          | Robert Gleeson
 
 
 __DESCRIPTION__
 
-ichannel simplifies interprocess communication by providing a bi-directional
-channel that can be used to transport ruby objects between processes on the same 
-machine. All communication on a channel occurs on a streamed UNIXSocket that a 
-channel uses to queues its messages (ruby objects), and also to ensure that 
-messages are received in the order they are sent.
+ichannel is a channel for interprocess communication between ruby processes on
+the same machine or network. The basic premise is that you can "put" a ruby
+object onto the channel and on the other end(maybe in a different process,
+or maybe on a different machine) you can "get" the object from the channel.
+A [unix socket](http://www.ruby-doc.org/stdlib-2.0/libdoc/socket/rdoc/UNIXSocket.html)
+(local to a single machine)  or [redis](https://redis.io) can be used for
+transport.
 
-__SERIALIZATION__
-
-ichannel relies on serialization when writing and reading from the underlying 
-UNIXSocket. A ruby object is serialized before a write, and it is deserialized 
-after a read. The choice of serializer is left up to you, though. A serializer 
-can be any object that implements `dump` and `load` -- two methods that are 
-usually implemented by serializers written in ruby.
+A channel depends on a serializer when reading and writing from the underlying
+socket(e.g: redis or a unix socket) but you can use any serializer that
+implements the dump and load methods. The default is set to be
+[Marshal](http://ruby-doc.org/core-2.0/Marshal.html)  since it is a core
+ruby module but you could also use JSON, YAML, MessagePack, or &lt;insert your 
+serializer here&gt;.
 
 __EXAMPLES__
 
 __1.__
 
-A demo of how to pass ruby objects through a channel and also between processes.  
-[Marshal](http://rubydoc.info/stdlib/core/Marshal) is the serializer of choice 
-in this example: 
+A demo of how to pass ruby objects through a channel and also between processes.
+[Marshal](http://rubydoc.info/stdlib/core/Marshal) is the serializer of choice,
+and a streamed UNIXSocket is used for transport:
 
 ```ruby
-channel = IChannel.new Marshal
-pid = fork do 
+channel = IChannel.unix Marshal
+pid = fork do
   channel.put Process.pid
   channel.put 'Hello!'
 end
@@ -43,14 +44,28 @@ Process.wait pid
 channel.get # => Fixnum
 channel.get # => 'Hello!'
 ```
-
 __2.__
 
-Knowing when a channel is readable can be useful so that you can avoid a
-blocking read. This (bad) example demonstrates how to do that:
+A demo of a channel sending messages between machines by using
+[redis](https://redis.io) for transport:
 
 ```ruby
-channel = IChannel.new Marshal
+channel = IChannel.redis Marshal, host: "10.0.0.1", key: "readme-example"
+channel.put %w(a)
+
+# In another process, on another machine, far away…
+channel = IChannel.redis Marshal, host: "10.0.0.1", key: "readme-example"
+channel.get # => ["a"]
+```
+
+__3.__
+
+Knowing when a channel is readable can be useful so that you can avoid a
+blocking read on the underlying UNIXSocket. This (bad) example demonstrates
+how to do that:
+
+```ruby
+channel = IChannel.unix Marshal
 pid = fork do
   sleep 3
   channel.put 42
@@ -62,7 +77,7 @@ channel.get # => 42
 Process.wait pid
 ```
 
-__3.__
+__4.__
 
 MessagePack doesn't implement `dump` or `load` but a wrapper can be easily
 written:
@@ -77,7 +92,7 @@ module MyMessagePack
     MessagePack.unpack(msg)
   end
 end
-channel = IChannel.new MyMessagePack
+channel = IChannel.unix MyMessagePack
 ```
 
 __PLATFORM SUPPORT__
@@ -85,21 +100,33 @@ __PLATFORM SUPPORT__
 _supported_
 
   * CRuby (1.9+)
+  * Rubinius (1.9+)
+  * JRuby (1.9+ - some tests skipped)
+    JRuby is supported and passes the test suite but it has a few skips.
+    Three skips are because jruby does not implement Kernel.fork and one
+    looks like a possible bug in JRuby's Marshal when trying to deserialize
+    a channel that uses a unix socket. The other 24 tests pass on jruby, &
+    those tests cover both unix sockets & redis.
 
 _unsupported_
-  
-  * CRuby 1.8
+
+  * Any 1.8 implementation
   * MacRuby
-  * JRuby
-  * Rubinius (support for Rubinius will come sometime in the future).
 
 __INSTALL__
+
+If you plan on using redis you'll need to install the 'redis' gem. It's
+optional:
+
+    $ gem install redis
+
+And to finish:
 
     $ gem install ichannel
 
 __SEE ALSO__
-  
-  - [ifuture](https://github.com/Havenwood/ifuture)  
+
+  - [ifuture](https://github.com/Havenwood/ifuture)
     futures built on process forks and ichannel.
 
 __LICENSE__

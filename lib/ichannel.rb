@@ -1,143 +1,29 @@
-require 'socket'
-class IChannel
-  SEP = '_$_'
-  if respond_to? :private_constant
-    private_constant :SEP
-  end
-  #
-  # @param [#dump,#load] serializer
-  #   Any object that implements dump, & load.
-  #
-  def initialize(serializer)
-    @reader, @writer = UNIXSocket.pair :STREAM
-    @serializer = serializer
-  end
+module IChannel
+  require "timeout"
+  require_relative "ichannel/unix_socket"
 
-  #
-  # @return [Boolean]
-  #   Returns true when the channel is closed.
-  #
-  def closed?
-    @reader.closed? && @writer.closed?
-  end
-
-  #
-  # Close the channel.
-  #
-  # @return [Boolean]
-  #   Returns true when the channel has been closed.
-  #
-  def close
-    unless closed?
-      @reader.close
-      @writer.close
-      true
-    end
-  end
-
-  #
-  # Add an object to the channel.
-  #
-  # @raise [IOError]
-  #   When the channel is closed.
-  #
-  # @param [Object] object
-  #   An object to add to the channel.
-  #
-  def write(object)
-    write!(object, nil)
-  end
-  alias_method :put, :write
-
-  #
-  # Add an object to the channel.
-  #
-  # Unlike {#write}, which waits indefinitely until the channel becomes writable,
-  # this method will raise an IOError when _timeout_ seconds elapse and
-  # the channel remains unwritable.
   #
   # @param
-  #   (see IChannel#write)
+  #   (see UNIXSocket#initialize)
   #
-  # @param [Numeric] timeout
-  #   The number of seconds to wait for the channel to become writable.
+  # @return
+  #   (see UNIXSocket#initialize)
   #
-  # @raise (see IChannel#write)
-  #
-  # @raise [IOError]
-  #   When _timeout_ seconds elapse & the channel remains unwritable.
-  #
-  def write!(object, timeout = 0.1)
-    if @writer.closed?
-      raise IOError, 'The channel cannot be written to (closed).'
-    end
-    _, writable, _ = IO.select nil, [@writer], nil, timeout
-    if writable
-      msg = @serializer.dump(object)
-      writable[0].syswrite "#{msg}#{SEP}"
-    else
-      raise IOError, 'The channel cannot be written to.'
-    end
+  def self.unix(serializer = Marshal, options = {})
+    UNIXSocket.new serializer, options
   end
-  alias_method :put!, :write!
 
   #
-  # Receive an object from the channel.
+  # @param
+  #   (see Redis#initialize)
   #
-  # @raise [IOError]
-  #   When the channel is closed.
+  # @return
+  #   (see Redis#initialize)
   #
-  # @return [Object]
-  #   The object read from the channel.
-  #
-  def recv
-    recv!(nil)
-  end
-  alias_method :get, :recv
-
-  #
-  # Receive an object from the channel.
-  #
-  # Unlike {#recv}, which waits indefinitely until the channel becomes readable,
-  # this method will raise an IOError when _timeout_ seconds elapse and the
-  # channel remains unreadable.
-  #
-  # @param [Numeric] timeout
-  #   The number of seconds to wait for the channel to become readable.
-  #
-  # @raise [IOError]
-  #   (see IChannel#recv)
-  #
-  # @raise [IOError]
-  #   When _timeout_ seconds elapse & the channel remains unreadable.
-  #
-  # @return [Object]
-  #   The object read from the channel.
-  #
-  def recv!(timeout = 0.1)
-    if @reader.closed?
-      raise IOError, 'The channel cannot be read from (closed).'
+  def self.redis(serializer = Marshal, options = {})
+    unless defined?(IChannel::Redis)
+      require_relative "ichannel/redis"
     end
-    readable, _ = IO.select [@reader], nil, nil, timeout
-    if readable
-      msg = readable[0].readline(SEP).chomp SEP
-      @serializer.load msg
-    else
-      raise IOError, 'The channel cannot be read from.'
-    end
-  end
-  alias_method :get!, :recv!
-
-  #
-  # @return [Boolean]
-  #   Returns true when the channel is readable.
-  #
-  def readable?
-    if closed?
-      false
-    else
-      readable, _ = IO.select [@reader], nil, nil, 0
-      !! readable
-    end
+    IChannel::Redis.new serializer, options
   end
 end
