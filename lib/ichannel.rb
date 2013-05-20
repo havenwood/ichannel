@@ -1,4 +1,4 @@
-require_relative "ichannel/channel"
+require_relative "ichannel/ichannel"
 require_relative "ichannel/unix_socket"
 require_relative "ichannel/redis"
 class IChannel
