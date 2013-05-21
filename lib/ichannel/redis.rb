@@ -1,35 +1,37 @@
 require "timeout"
 require "redis"
-class IChannel::Redis < Channel
-  def initialize(serializer, options)
-    key = options.delete(:key) || "channel"
-    @redis = ::Redis.new options
+module IChannel
+  class Redis < Channel
+    def initialize(serializer, options)
+      key = options.delete(:key)
+      @redis = ::Redis.new options
     
-    super serializer, key
-  end
-    
-  def close_channel
-    @redis.quit
-  end
-  
-  def write_to_channel(object, timeout)
-    Timeout.timeout(timeout) do
-      dump = dumped object
-      @redis.lpush @key, dump
+      super serializer, key
     end
-  end
+    
+    def close_channel
+      @redis.quit
+    end
   
-  def recv_from_channel(timeout)
-    Timeout.timeout(timeout) do
-      while empty?
-        sleep 0.01
+    def write_to_channel(object, timeout)
+      Timeout.timeout(timeout) do
+        dump = dumped object
+        @redis.lpush @key, dump
       end
-      dump = @redis.rpop @key
-      @last_msg = msg_from dump
     end
-  end
   
-  def channel_empty?
-    @redis.llen(@key).zero?
+    def recv_from_channel(timeout)
+      Timeout.timeout(timeout) do
+        while empty?
+          sleep 0.01
+        end
+        dump = @redis.rpop @key
+        @last_msg = msg_from dump
+      end
+    end
+  
+    def channel_empty?
+      @redis.llen(@key).zero?
+    end
   end
 end

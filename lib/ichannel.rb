@@ -11,7 +11,7 @@ module IChannel
   #   (see UNIXSocket#initialize)
   #
   def self.unix(serializer = Marshal, options = {})
-    IChannel::UNIXSocket.new serializer, options
+    UNIXSocket.new serializer, options
   end
 
   #
@@ -22,12 +22,13 @@ module IChannel
   #   (see Redis#initialize)
   #
   def self.redis(serializer = Marshal, options = {})
-    IChannel::Redis.new serializer, options
+    Redis.new serializer, options
   end
   
+  # TODO: TDD (too late)
   def self.new(transporter, serializer = Marshal, options = {})
-    if IChannel.respond_to? transporter
-      IChannel.send transporter
+    if self.respond_to? transporter
+      self.send transporter, serializer, options
     else
       raise UnknownTransporter, 'Allowed transporters are :redis or :unix.'
     end

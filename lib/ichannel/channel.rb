@@ -1,4 +1,4 @@
-class Channel
+class IChannel::Channel
   #
   # @param [#dump,#load] serializer
   #   A serializer.
@@ -10,7 +10,7 @@ class Channel
   #
   def initialize(serializer, key)
     @serializer = serializer
-    @key = key
+    @key = key || "channel"
     @last_msg = nil
     @closed = false
   end
