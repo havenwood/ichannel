@@ -7,10 +7,9 @@ module IChannel
       private_constant :SEP
     end
 
-    def initialize(serializer = Marshal, options)
+    def initialize(serializer = Marshal)
       @reader, @writer = ::UNIXSocket.pair :STREAM
-      key = options.delete(:key)
-      super(serializer, key)
+      super serializer
     end
   
     def close_channel

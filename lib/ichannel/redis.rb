@@ -3,10 +3,13 @@ require "redis"
 module IChannel
   class Redis < Channel
     def initialize(serializer, options)
-      key = options.delete(:key)
+      @key = redis_key_from(options)
       @redis = ::Redis.new options
+      super serializer
+    end
     
-      super serializer, key
+    def redis_key_from(options)
+      options.delete(:key) || "channel"
     end
     
     def close_channel

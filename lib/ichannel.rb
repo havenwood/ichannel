@@ -10,8 +10,8 @@ module IChannel
   # @return
   #   (see UNIXSocket#initialize)
   #
-  def self.unix(serializer = Marshal, options = {})
-    UNIXSocket.new serializer, options
+  def self.unix(serializer = Marshal, *args)
+    UNIXSocket.new serializer
   end
 
   #

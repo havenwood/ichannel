@@ -8,9 +8,8 @@ class IChannel::Channel
   #
   # @return [IChannel::Redis]
   #
-  def initialize(serializer, key)
+  def initialize(serializer)
     @serializer = serializer
-    @key = key || "channel"
     @last_msg = nil
     @closed = false
   end
