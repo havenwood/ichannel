@@ -1,4 +1,4 @@
-class IChannel
+class Channel
   #
   # @param [#dump,#load] serializer
   #   A serializer.

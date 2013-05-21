@@ -1,6 +1,6 @@
 require "timeout"
 require "socket"
-class IChannel::UNIXSocket < IChannel
+class IChannel::UNIXSocket < Channel
   SEP = '_$_'
   if respond_to? :private_constant
     private_constant :SEP

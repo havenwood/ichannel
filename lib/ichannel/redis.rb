@@ -1,6 +1,6 @@
 require "timeout"
 require "redis"
-class IChannel::Redis < IChannel
+class IChannel::Redis < Channel
   def initialize(serializer, options)
     key = options.delete(:key) || "channel"
     @redis = ::Redis.new options
